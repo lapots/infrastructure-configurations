@@ -1,0 +1,4 @@
+
+# for now due to storing executable travisci plugin
+*.exe
+.terraform
