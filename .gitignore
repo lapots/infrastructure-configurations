@@ -2,6 +2,7 @@
 # for now due to storing executable travisci plugin
 *.exe
 .terraform
+*.tfstate
 
 ### IntelliJ IDEA ###
 .idea
