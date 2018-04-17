@@ -18,7 +18,8 @@ resource "aws_db_instance" "default" {
   name = "core"
   port = 5432
   engine_version = "10"
-
+  skip_final_snapshot = true
+  final_snapshot_identifier = "snap-1"
   username = "${var.username}"
   password = "${var.password}"
 }
