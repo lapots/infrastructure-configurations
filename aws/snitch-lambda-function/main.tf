@@ -63,10 +63,11 @@ resource "aws_lambda_permission" "allow_bucket" {
 
 # TODO: investigate
 resource "aws_lambda_function" "snitch" {
-  filename = ""
-  function_name = ""
+  filename = "build/project_name.jar"
+  function_name = "snitch_rule_function"
   role = "${aws_iam_role.iam_for_lambda.arn}"
-  handler = ""
+  handler = "class_name"
+  runtime = "java8"
 }
 
 resource "aws_s3_bucket_notification" "bucket_notification" {
