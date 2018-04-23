@@ -11,6 +11,7 @@ provider "aws" {
 }
 
 resource "aws_db_instance" "default" {
+  availability_zone = "eu-central-1a"
   allocated_storage = 10
   storage_type = "gp2"
   engine = "postgres"
