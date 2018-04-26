@@ -19,3 +19,12 @@ resource "aws_s3_bucket" "mvn_repo" {
     Environment = "Dev"
   }
 }
+
+resource "aws_s3_bucket" "deploy_app_bucket" {
+  bucket = "deploy-app-bucket"
+  acl = "private"
+  tags {
+    Name = "Deploy application bucket"
+    Environment = "Dev"
+  }
+}
