@@ -26,6 +26,29 @@ resource "aws_elastic_beanstalk_application" "judge" {
   description = "Judge rule engine"
 }
 
+resource "aws_iam_instance_profile" "judge_eb_profile" {
+  name = "judge-beanstalk-user"
+  role = "${aws_iam_role.iam_for_judge.name}"
+}
+
+resource "aws_iam_role" "iam_for_judge" {
+  name = "judge-beanstalk-user-rule"
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": "sts:AssumeRole",
+      "Principal": {
+        "Service": "ec2.amazonaws.com"
+      },
+      "Effect": "Allow"
+    }
+  ]
+}
+EOF
+}
+
 locals {
   subnets = [
     "${aws_default_subnet.central-1a.id}",
@@ -35,8 +58,8 @@ locals {
 }
 
 resource "aws_elastic_beanstalk_environment" "judge_env" {
-  name = "judge-rule-engine-env"
-  application = "judge-rule-engine"
+  name = "${aws_elastic_beanstalk_application.judge.name}-env"
+  application = "${aws_elastic_beanstalk_application.judge.name}"
   cname_prefix = "judge"
 
   solution_stack_name = "64bit Amazon Linux 2017.09 v2.6.8 running Java 8"
@@ -52,4 +75,25 @@ resource "aws_elastic_beanstalk_environment" "judge_env" {
     namespace = "aws:ec2:vpc"
     value = "${join(",", local.subnets)}"
   }
+
+  setting {
+    namespace = "aws:autoscaling:launchconfiguration"
+    name = "IamInstanceProfile"
+    value = "${aws_iam_instance_profile.judge_eb_profile.name}"
+  }
+
+  setting {
+    name = "db_user"
+    namespace = "aws:elasticbeanstalk:application:environment"
+    value = "${var.rds_db_user}"
+  }
+
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name = "db_password"
+    value = "${var.rds_db_password}"
+  }
 }
+
+variable "rds_db_user" {}
+variable "rds_db_password" {}
