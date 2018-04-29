@@ -1,3 +1,4 @@
+# moved everything to the lambda application
 terraform {
   backend "s3" {
     bucket = "s3-terraform-state-backend"
