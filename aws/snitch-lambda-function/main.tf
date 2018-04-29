@@ -7,9 +7,9 @@ terraform {
 }
 
 variable "travisci_token" {}
-variable "aws_access_key" {}
-variable "aws_secret_key" {}
-variable "judge_url" {}
+variable "judge_url" {
+  default = "http://judge.eu-central-1.elasticbeanstalk.com/judge/rest/player"
+}
 
 provider "travisci" {
   github_owner = "lapots"
@@ -22,8 +22,6 @@ resource "travisci_repository" "travis_resource" {
 
 provider "aws" {
   region = "eu-central-1"
-  access_key = "${var.aws_access_key}"
-  secret_key = "${var.aws_secret_key}"
 }
 
 resource "aws_s3_bucket" "game_rules" {
